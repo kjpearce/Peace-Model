@@ -42,21 +42,22 @@ c65 = strength(12);
 
 
 %%%% system species
-x1  = y(1);
-x2  = y(2);
-x3  = y(3);
+x1 = y(1);
+x2 = y(2);
+x3 = y(3);
 x4 = y(4);
 x5 = y(5);
 x6 = y(6);
 
 
 %
-  dy = [ -m_pos*x1 + b(1) + c15*tanh(x5) ;
+  dy = [-m_pos*x1 + b(1) + c15*tanh(x5);
         -m_neg*x2 + b(2) + c26*tanh(x6);
         -m_pos*x3 + b(3) + c31*tanh(x1) + c35*tanh(x5); 
         -m_neg*x4 + b(4) + c42*tanh(x2) + c46*tanh(x6);
         -m_pos*x5 + b(5) + c51*tanh(x1) + c53*tanh(x3) + c56*tanh(x6);
         -m_neg*x6 + b(6) + c62*tanh(x2) + c64*tanh(x4) + c65*tanh(x5)];
+  end
 
 
 
