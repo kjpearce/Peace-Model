@@ -107,17 +107,9 @@ for parind = 1:numpar
     %%% full parameter vector with complex pert
     partemp(parind) = par_pert; 
     
-    memspert_vals = partemp(1:nummems);
-    memspert_cell = [mem_pars; num2cell(memspert_vals)];
-    memspert = struct(memspert_cell{:});
-    
-    selfrpert_vals = partemp(nummems+1:nummems+numselfr);
-    selfrpert_cell = [self_pars; num2cell(selfrpert_vals)];
-    selfrpert = struct(selfrpert_cell{:});
-    
-    strengthpert_vals = partemp(nummems+numselfr+1:end);
-    strengthpert_cell = [stren_pars; num2cell(strengthpert_vals)];
-    strengthpert = struct(strengthpert_cell{:});
+    memspert = partemp(1:nummems);
+    selfrpert = partemp(nummems+1:nummems+numselfr);
+    strengthpert = partemp(nummems+numselfr+1:end);
     
     [~,Y] = ode15s(@peace_ddt,tspan,X0,odeoptions,memspert,selfrpert,strengthpert);
 
