@@ -8,34 +8,49 @@
 
 
 
-%%%%% 
+  function dy = peace_ddt(t,y,m,b,C)
 
-
-  function dy = peace_ddt(t,y,m,b,s)
-
-
+%%% C is the weighted adjacency matrix for corresp graph of ''strengths''
+num_states = length(y);
 %%% m: degree of memory for system (neg mem stronger influence than pos) 
-m_neg = m.m_pos * m.gamma;
+m_pos = m.mpos;
+m_neg = m.mpos * m.gamma;
 
-%%% b: self-reinforcement of peace factor (unknown values)
-%%% s: nonzero strengths between factors 
+%%% create vector of m params:
+mvec = zeros(num_states,1);
+for state = 1:num_states
+    if mod(state,2) == 0
+        %%% if the state is even
+        mvec(state) = m_neg;
+    else
+        mvec(state) = m_pos;
+    end
+end
 
-%%%% system species
-x1 = y(1);
-x2 = y(2);
-x3 = y(3);
-x4 = y(4);
-x5 = y(5);
-x6 = y(6);
+%%% create b vector (self-reinforcement params)
+bvec = zeros(num_states,1);
+%%% grab field values from b (in inc order of states)
+bcell = struct2cell(b); 
+for state = 1:num_states
+    bvec(state) = bcell{state};
+end
 
+lin = mvec
 
-%
-  dy = [-m.m_pos*x1 + b.b1 + c15*tanh(x5);
-        -m_neg*x2 + b.b2 + c26*tanh(x6);
-        -m.m_pos*x3 + b.b3 + c31*tanh(x1) + c35*tanh(x5); 
-        -m_neg*x4 + b.b4 + c42*tanh(x2) + c46*tanh(x6);
-        -m.m_pos*x5 + b.b5 + c51*tanh(x1) + c53*tanh(x3) + c56*tanh(x6);
-        -m_neg*x6 + b.b6 + c62*tanh(x2) + c64*tanh(x4) + c65*tanh(x5)];
+for state = 1:num_states
+    %%% jvec is the column index of nonzero entries in C
+    %%% weights is the strength in the entry C_ij
+
+    lin(state,1) = mvec(state)*y(state)+bvec(state);
+end
+
+Cterm = zeros(num_states, 1);
+for state = 1:num_states
+    Cterm(state) = C(state,:)*tanh(y);
+end
+
+dy = lin + Cterm;
+
   end
 
 
